@@ -49,6 +49,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <!-- Assurez-vous que le scope est par défaut (non spécifié) ou 'runtime'. 
+         Si vous aviez mis 'test' ou 'provided', retirez-le. -->
+    <scope>runtime</scope>
+</dependency>
 	</dependencies>
 
 	<build>
