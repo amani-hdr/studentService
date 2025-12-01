@@ -3,8 +3,9 @@ package com.example.student_service.controller;
 import com.example.student_service.model.University;
 import com.example.student_service.model.Student;
 import com.example.student_service.repository.UniversityRepository;
-import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.EntityNotFoundException;
 
 import java.util.List;
 
@@ -44,5 +45,32 @@ public class UniversityController {
         University uni = universityRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("University not found"));
         return uni.getStudents();
+    }
+    
+    // ✏️ METTRE À JOUR une université (PUT) - CORRECTION AJOUTÉE
+    @PutMapping("/{id}")
+    public ResponseEntity<University> updateUniversity(@PathVariable Long id, @RequestBody University universityDetails) {
+        // Recherche l'université existante
+        University existingUniversity = universityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("University not found with ID: " + id));
+
+        // Met à jour les champs
+        existingUniversity.setName(universityDetails.getName());
+        existingUniversity.setLocation(universityDetails.getLocation());
+
+        // Sauvegarde et retourne l'entité mise à jour
+        University updatedUniversity = universityRepository.save(existingUniversity);
+        return ResponseEntity.ok(updatedUniversity);
+    }
+
+    // 🗑️ SUPPRIMER une université (DELETE) - CORRECTION AJOUTÉE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUniversity(@PathVariable Long id) {
+        if (!universityRepository.existsById(id)) {
+            throw new EntityNotFoundException("University not found with ID: " + id);
+        }
+        universityRepository.deleteById(id);
+        // Retourne une réponse 204 No Content pour la suppression réussie
+        return ResponseEntity.noContent().build();
     }
 }
